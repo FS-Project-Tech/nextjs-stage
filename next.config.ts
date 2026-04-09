@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from '@next/bundle-analyzer';
+import { CSP_HEADER } from "./lib/security-headers";
  
 // Optionally include a domain from the WooCommerce API URL if provided
 const wcApiUrl = process.env.NEXT_PUBLIC_WP_URL;
@@ -52,20 +53,6 @@ function nursingServiceRootRedirects(): Array<{
 }
  
 const nextConfig: NextConfig = {
-
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Content-Security-Policy",
-            value: ContentSecurityPolicy.replace(/\n/g, ""),
-          },
-        ],
-      },
-    ];
-  },
 
   reactCompiler: true,
  
@@ -236,7 +223,7 @@ const nextConfig: NextConfig = {
     // Enable image optimization
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
-    // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    contentSecurityPolicy: CSP_HEADER,
     // Increase timeout for slow upstream servers (30 seconds)
     // Note: This requires Next.js 14.1+ for full support
     unoptimized: false,
@@ -302,17 +289,6 @@ const nextConfig: NextConfig = {
  * Google Maps JS + Places needs script/connect to Google hosts, map tiles in img-src,
  * and blob workers. Without these, checkout AddressAutocomplete is blocked by the browser.
  */
-const ContentSecurityPolicy = `
-  default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://connect.facebook.net https://maps.googleapis.com https://maps.gstatic.com;
-  connect-src 'self' https://www.google-analytics.com https://connect.facebook.net https://maps.googleapis.com https://*.googleapis.com https://*.gstatic.com https://*.google.com;
-  img-src 'self' data: blob: https://www.google-analytics.com https://www.facebook.com https://www.googletagmanager.com https://*.google.com https://*.googleapis.com https://*.gstatic.com https://*.ggpht.com;
-  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  font-src 'self' data: https://fonts.gstatic.com;
-  worker-src 'self' blob:;
-  frame-src https://www.googletagmanager.com;
-`;
-
 
  
 export default withBundleAnalyzer(nextConfig);
