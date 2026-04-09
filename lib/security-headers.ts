@@ -1,14 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+/**
+ * Used by `next.config.ts` image optimizer responses.
+ * Keep this separate from page CSP (nonce-based) applied in proxy.
+ */
+export const CSP_HEADER = "script-src 'none'; frame-src 'none'; sandbox;"
  
 export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
   const isDev = process.env.NODE_ENV === 'development'
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ''};
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com https://connect.facebook.net https://embed.tawk.to;
     style-src 'self' 'nonce-${nonce}';
-    img-src 'self' blob: data:;
+    connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://connect.facebook.net https://graph.facebook.com https://www.facebook.com https://embed.tawk.to https://*.tawk.to wss://*.tawk.to;
+    img-src 'self' blob: data: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com https://*.tawk.to;
     font-src 'self';
+    frame-src 'self' https://www.googletagmanager.com https://embed.tawk.to https://*.tawk.to;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
@@ -22,11 +30,6 @@ export function proxy(request: NextRequest) {
  
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-nonce', nonce)
- 
-  requestHeaders.set(
-    'Content-Security-Policy',
-    contentSecurityPolicyHeaderValue
-  )
  
   const response = NextResponse.next({
     request: {

@@ -135,6 +135,7 @@ export default async function RootLayout({
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4MeasurementId)}`}
+              nonce={nonce}
               strategy="afterInteractive"
             />
             <Script id="google-analytics" nonce={nonce} strategy="afterInteractive">
