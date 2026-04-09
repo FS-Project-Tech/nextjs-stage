@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from '@next/bundle-analyzer';
-import { CSP_HEADER } from "./lib/security-headers";
  
 // Optionally include a domain from the WooCommerce API URL if provided
 const wcApiUrl = process.env.NEXT_PUBLIC_WP_URL;
@@ -73,21 +72,8 @@ const nextConfig: NextConfig = {
       'react-hook-form',
       'lucide-react',
     ],
-    // Enable faster refresh for better HMR experience
-    // optimizeCss: true, // Uncomment if using CSS optimization
-    // Turbopack persistent caching (available in Next.js 15.1+)
     // turbopackPersistentCaching: true, // Uncomment if using Next.js 15.1+
   },
- 
-  // Route-based prefetching configuration
-  // Next.js automatically prefetches links when they enter the viewport
-  // This configuration optimizes prefetch behavior
-  // Note: Prefetch distance is controlled by Next.js internally (default: ~200px)
-  // We can optimize by using prefetch={true} on critical paths
- 
-  // ISR (Incremental Static Regeneration) for SEO-friendly product/category pages
-  // Pages will be statically generated and revalidated every 5 minutes
-  // This ensures fast page loads while keeping content fresh
  
   // Optimize loading performance - reduces memory usage in dev
   // Prevents re-compiling on every click by keeping pages in memory longer
@@ -171,11 +157,6 @@ const nextConfig: NextConfig = {
       // Add known WooCommerce media hosts here
       {
         protocol: "https",
-        hostname: "**.com.au",
-        pathname: "/wp-content/uploads/**",
-      },
-      {
-        protocol: "https",
         hostname: "stage.joyamedicalsupplies.com.au",
         pathname: "/wp-content/uploads/**",
       },
@@ -223,9 +204,6 @@ const nextConfig: NextConfig = {
     // Enable image optimization
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
-    contentSecurityPolicy: CSP_HEADER,
-    // Increase timeout for slow upstream servers (30 seconds)
-    // Note: This requires Next.js 14.1+ for full support
     unoptimized: false,
   },
  
