@@ -51,6 +51,7 @@ export default async function Home({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
   return (
+    
     <>
       <WebsiteStructuredData
         siteUrl={siteUrl}

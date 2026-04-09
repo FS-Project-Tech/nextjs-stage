@@ -15,6 +15,7 @@ import "./globals.css";
 import TawkToWidget from "@/components/TawkToWidget";
 import AnalyticsInitializer from "@/components/AnalyticsInitializer";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
+import { headers } from "next/headers";
 
 
 // Validate environment variables at startup (server-side only)
@@ -111,11 +112,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
     <html
       lang="en"
@@ -135,7 +137,7 @@ export default function RootLayout({
               src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4MeasurementId)}`}
               strategy="afterInteractive"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" nonce={nonce} strategy="afterInteractive">
               {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config',${JSON.stringify(ga4MeasurementId)},{send_page_view:false});`}
             </Script>
           </>

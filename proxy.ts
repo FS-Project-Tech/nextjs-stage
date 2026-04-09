@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { proxy as addSecurityHeadersToResponse } from "@/lib/security-headers";
+import { headers } from "next/headers";
 
 /**
  * Next.js 16+: `middleware.ts` is deprecated in favor of `proxy.ts`.
@@ -21,3 +22,11 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };
+
+const nonce = (await headers()).get("x-nonce") ?? undefined;
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com;
+  connect-src 'self' https://www.google-analytics.com;
+  img-src 'self' data: https://www.google-analytics.com;
+`
