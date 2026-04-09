@@ -29,21 +29,19 @@ export function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
   const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${
-      isDev ? "'unsafe-eval'" : ""
-    } https://www.googletagmanager.com https://connect.facebook.net https://embed.tawk.to;
-    style-src 'self' 'nonce-${nonce}';
-    connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://connect.facebook.net https://graph.facebook.com https://www.facebook.com https://embed.tawk.to https://*.tawk.to wss://*.tawk.to;
-    img-src 'self' blob: data: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com https://*.tawk.to;
-    font-src 'self';
-    frame-src 'self' https://www.googletagmanager.com https://embed.tawk.to https://*.tawk.to;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    upgrade-insecure-requests;
-  `;
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://connect.facebook.net https://embed.tawk.to;
+      style-src 'self' 'unsafe-inline';
+      connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com https://connect.facebook.net https://graph.facebook.com https://www.facebook.com https://embed.tawk.to https://*.tawk.to wss://*.tawk.to;
+      img-src 'self' blob: data: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com https://*.tawk.to;
+      font-src 'self';
+      frame-src 'self' https://www.googletagmanager.com https://embed.tawk.to https://*.tawk.to;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+      frame-ancestors 'none';
+      upgrade-insecure-requests;
+    `;
 
   const contentSecurityPolicyHeaderValue = cspHeader
     .replace(/\s{2,}/g, " ")

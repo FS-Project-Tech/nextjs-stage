@@ -171,7 +171,7 @@ const nextConfig: NextConfig = {
       // Add known WooCommerce media hosts here
       {
         protocol: "https",
-        hostname: "live.joyamedicalsupplies.com.au",
+        hostname: "**.com.au",
         pathname: "/wp-content/uploads/**",
       },
       {
